@@ -7,6 +7,7 @@ public class movement : MonoBehaviour
     public LayerMask WhatIsGround;
     float speed = 7f;
     float jumpforce = 7f;
+    public int score = 0;
     bool isgrounded = false;
     Rigidbody2D rb2d;
 
@@ -44,7 +45,7 @@ public class movement : MonoBehaviour
     {
         if (collision.gameObject.tag == "cure")
         {
-            Debug.Log("collected");
+            score++;
         }
 
         if (collision.gameObject.tag == "poison")
