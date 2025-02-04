@@ -8,6 +8,7 @@ public class movement : MonoBehaviour
     float speed = 7f;
     float jumpforce = 7f;
     public int score = 0;
+    public int highscore = 0;
     bool isgrounded = false;
     Rigidbody2D rb2d;
 
@@ -16,6 +17,7 @@ public class movement : MonoBehaviour
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        highscoreloader();
     }
 
     // Update is called once per frame
@@ -46,11 +48,32 @@ public class movement : MonoBehaviour
         if (collision.gameObject.tag == "cure")
         {
             score++;
+            if(score >= highscore)
+            {
+                highscore = score;
+                highscoresaver();
+                highscoreloader();
+            }
         }
 
         if (collision.gameObject.tag == "poison")
         {
             Destroy(playerobj);
         }
+
+
     }
+
+    public void highscoresaver()
+    { 
+            savesystem.saveplayer(this);
+    }
+
+    public void highscoreloader()
+    {
+            playerdata data = savesystem.loadplayer();
+            highscore = data.highscore;
+    }
+
+
 }

@@ -1,12 +1,12 @@
 using UnityEngine;
 
 [System.Serializable]
-public class playerdata : MonoBehaviour
+public class playerdata
 {
-    public int score;
+    public int highscore;
 
     public playerdata(movement player)
     {
-        score = player.score;
+        highscore = player.highscore;
     }
 }
