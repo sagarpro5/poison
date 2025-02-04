@@ -43,12 +43,12 @@ public class movement : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "cure")
+        if (collision.collider.CompareTag ("cure"))
         {
             score++;
-            if(score >= highscore)
+            if (score >= highscore)
             {
                 highscore = score;
                 highscoresaver();
@@ -56,12 +56,10 @@ public class movement : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.tag == "poison")
+        if (collision.collider.CompareTag("poison"))
         {
             Destroy(playerobj);
         }
-
-
     }
 
     public void highscoresaver()
