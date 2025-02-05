@@ -1,13 +1,18 @@
+using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class movement : MonoBehaviour
 {
     public GameObject playerobj;
+    public GameObject gameover;
     public LayerMask WhatIsGround;
     float speed = 7f;
     float jumpforce = 7f;
     public int score = 0;
+    public int coins = 0;
     public int highscore = 0;
     bool isgrounded = false;
     Rigidbody2D rb2d;
@@ -15,6 +20,7 @@ public class movement : MonoBehaviour
     public int second;
     public int minites;
     public int hours;
+    public TextMeshProUGUI mtext,stext,mitext,htext;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -46,20 +52,24 @@ public class movement : MonoBehaviour
             rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y * 0.5f);
         }
         milesecond++;
+        mtext.text = milesecond.ToString();
         if(milesecond == 60)
         {
             second++;
             milesecond = 0;
+            stext.text = second.ToString();
         }
-        if(second == 60)
+        if (second == 60)
         {
             minites++;
             second = 0;
+            mitext.text = minites.ToString();
         }
-        if(minites == 60)
+        if (minites == 60)
         {
             hours++;
             minites = 0;
+            htext.text = hours.ToString();
         }
 
     }
@@ -80,7 +90,17 @@ public class movement : MonoBehaviour
         if (collision.collider.CompareTag("poison"))
         {
             Destroy(playerobj);
+            highscoresaver();
+            highscoreloader();
+            gameover.SetActive(true);
+
         }
+    }
+
+    public void playagain()
+    {
+       string currentscene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentscene);
     }
 
     public void highscoresaver()
@@ -92,6 +112,7 @@ public class movement : MonoBehaviour
     {
             playerdata data = savesystem.loadplayer();
             highscore = data.highscore;
+            coins = data.score;
     }
 
 
