@@ -11,6 +11,10 @@ public class movement : MonoBehaviour
     public int highscore = 0;
     bool isgrounded = false;
     Rigidbody2D rb2d;
+    public int milesecond;
+    public int second;
+    public int minites;
+    public int hours;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,6 +45,23 @@ public class movement : MonoBehaviour
         {
             rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y * 0.5f);
         }
+        milesecond++;
+        if(milesecond == 60)
+        {
+            second++;
+            milesecond = 0;
+        }
+        if(second == 60)
+        {
+            minites++;
+            second = 0;
+        }
+        if(minites == 60)
+        {
+            hours++;
+            minites = 0;
+        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
