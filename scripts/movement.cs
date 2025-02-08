@@ -8,6 +8,8 @@ public class movement : MonoBehaviour
 {
     public GameObject playerobj;
     public GameObject gameover;
+    public GameObject gamewon;
+    public Transform cam;
     public LayerMask WhatIsGround;
     float speed = 7f;
     float jumpforce = 7f;
@@ -20,7 +22,11 @@ public class movement : MonoBehaviour
     public int second;
     public int minites;
     public int hours;
-    public TextMeshProUGUI mtext,stext,mitext,htext;
+    public int highmilesecond = 45;
+    public int highsecond = 56;
+    public int highminites = 1;
+    public int highhours = 0;
+    public TextMeshProUGUI mtext, stext, mitext, htext, hmtext, hstext, hmitext, hihtext;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -33,6 +39,7 @@ public class movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        cam.position = new Vector3(this.transform.position.x, this.transform.position.y + 2,-1);
         isgrounded = Physics2D.Raycast(transform.position, Vector3.down, 1,WhatIsGround);
 
         if (Input.GetKey(KeyCode.A))
@@ -45,11 +52,11 @@ public class movement : MonoBehaviour
         }
         if (Input.GetButtonDown("Jump") && isgrounded)
         {
-            rb2d.velocity = new Vector2(rb2d.velocity.x, jumpforce);
+            rb2d.linearVelocity = new Vector2(rb2d.linearVelocity.x, jumpforce);
         }
-        if(Input.GetButtonUp("Jump") && rb2d.velocity.y > 0f)
+        if(Input.GetButtonUp("Jump") && rb2d.linearVelocity.y > 0f)
         {
-            rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y * 0.5f);
+            rb2d.linearVelocity = new Vector2(rb2d.linearVelocity.x, rb2d.linearVelocity.y * 0.5f);
         }
         milesecond++;
         mtext.text = milesecond.ToString();
@@ -89,11 +96,37 @@ public class movement : MonoBehaviour
 
         if (collision.collider.CompareTag("poison"))
         {
+            movement m = GetComponent<movement>();
+            m.enabled = false;
             Destroy(playerobj);
             highscoresaver();
             highscoreloader();
             gameover.SetActive(true);
 
+        }
+
+        if(collision.collider.CompareTag("finish"))
+        {
+            gamewon.SetActive(true);
+            movement m = GetComponent<movement>();
+
+            m.enabled = false;
+
+            hmtext.text = highmilesecond.ToString();
+            hstext.text = highsecond.ToString();
+            hmitext.text = highminites.ToString();
+            hihtext.text = highhours.ToString();
+
+            if (milesecond < highmilesecond && second < highsecond && minites < highminites && highhours > hours || milesecond < highmilesecond && second < highsecond && minites < highminites)
+            {
+                highmilesecond = milesecond;
+                highsecond = second;
+                highminites = minites;
+                highhours = hours;
+                highrunsaver() ;
+                highrunloader();
+
+            }
         }
     }
 
@@ -112,8 +145,20 @@ public class movement : MonoBehaviour
     {
             playerdata data = savesystem.loadplayer();
             highscore = data.highscore;
-            coins = data.score;
     }
 
+    public void highrunsaver()
+    {
+        runssaver.Saverun(this);
+    }
+
+    public void highrunloader()
+    {
+        speedrunsave d = runssaver.Loadrun();
+        highmilesecond = d.highmilesecond;
+        highhours = d.highhours;
+        highminites = d.highminites;
+        highsecond = d.highsecond;
+    }
 
 }
